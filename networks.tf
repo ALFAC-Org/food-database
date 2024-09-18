@@ -14,6 +14,6 @@ resource "aws_subnet" "food_database_subnet_az_2" {
   availability_zone = var.subnet_availability_zone_az_2
 
   tags = {
-    Name = "food_database_subnet_az_1"
+    Name = "food_database_subnet_az_2"
   }
 }

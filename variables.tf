@@ -44,3 +44,8 @@ variable "arn_aws_lab_role" {
   description = "ARN for the IAM role"
   type        = string
 }
+
+variable "lambda_sg_id" {
+  description = "Security Group ID for the Lambda"
+  type        = string
+}
