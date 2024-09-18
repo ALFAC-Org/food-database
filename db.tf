@@ -23,7 +23,7 @@ resource "aws_security_group" "food_db_sg" {
     protocol    = "tcp"
     security_groups = [
       # TODO: Add application kubernetes security group - aws_security_group.app_sg.id,
-      #aws_security_group.lambda_sg.id # TODO: Validar se precisamos adicionar isso como variável
+      var.lambda_sg_id
     ]
   }
 
