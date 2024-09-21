@@ -48,6 +48,7 @@ resource "aws_db_instance" "food_database" {
   identifier           = "food-db"
   username             = var.db_username
   password             = var.db_password
+  db_name              = var.db_name
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
 

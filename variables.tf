@@ -40,6 +40,12 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "db_name" {
+  description = "Security Group ID for the Lambda"
+  type        = string
+  default = "fooddb"
+}
+
 variable "arn_aws_lab_role" {
   description = "ARN for the IAM role"
   type        = string
