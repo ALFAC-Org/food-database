@@ -1,11 +1,18 @@
+# AWS provider configuration
 variable "aws_region" {
   description = "AWS region"
   type        = string
   default     = "us-east-1"
 }
 
+variable "arn_aws_lab_role" {
+  description = "ARN for the IAM role"
+  type        = string
+}
+
+# VPC configuration
 variable "vpc_id" {
-  description = "VPC ID - VPC Created in the infrastructure repo" 
+  description = "VPC ID - VPC Created in the infrastructure repo"
   type        = string
 }
 
@@ -29,6 +36,7 @@ variable "subnet_availability_zone_az_2" {
   type        = string
 }
 
+# Database configuration
 variable "db_username" {
   description = "The username for the RDS instance"
   type        = string
@@ -43,14 +51,10 @@ variable "db_password" {
 variable "db_name" {
   description = "Security Group ID for the Lambda"
   type        = string
-  default = "fooddb"
+  default     = "fooddb"
 }
 
-variable "arn_aws_lab_role" {
-  description = "ARN for the IAM role"
-  type        = string
-}
-
+# Lambda configuration
 variable "lambda_sg_id" {
   description = "Security Group ID for the Lambda"
   type        = string
