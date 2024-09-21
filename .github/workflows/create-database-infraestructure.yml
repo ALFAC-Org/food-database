@@ -19,14 +19,14 @@ jobs:
     - name: Get VPC ID
       id: get-vpc-id
       run: |
-        VPC_NAME="${{ env.VPC_NAME }}"
+        VPC_NAME="${{ secrets.VPC_NAME }}"
         VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=$VPC_NAME" --query "Vpcs[0].VpcId" --output text)
         echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
 
     - name: Get Lambda Security Group ID
       id: get-lambda-sg-id
       run: |
-        SG_NAME="${{ env.LAMBDA_SG_NAME }}"
+        SG_NAME="${{ secrets.LAMBDA_SG_NAME }}"
         LAMBDA_SG_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=$SG_NAME" --query "SecurityGroups[0].GroupId" --output text)
         echo "LAMBDA_SG_ID=$LAMBDA_SG_ID" >> $GITHUB_ENV
 
@@ -51,8 +51,8 @@ jobs:
 
     - name: Overwrite .env variable
       run: |
-        echo "VPC_ID=${{ env.VPC_ID }}" >> .env
-        echo "LAMBDA_SG_ID=${{ env.LAMBDA_SG_ID }}" >> .env
+        echo "VPC_ID=${{ secrets.VPC_ID }}" >> .env
+        echo "LAMBDA_SG_ID=${{ secrets.LAMBDA_SG_ID }}" >> .env
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
