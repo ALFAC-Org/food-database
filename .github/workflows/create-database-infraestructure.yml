@@ -70,10 +70,13 @@ jobs:
       run: terraform init -upgrade
 
     - name: Terraform Validate
+      if: success()
       run: terraform validate
 
     - name: Terraform Plan
+      if: success()
       run: bash terraform.sh plan
 
     - name: Terraform Apply
+      if: success()
       run: bash terraform.sh apply -auto-approve
