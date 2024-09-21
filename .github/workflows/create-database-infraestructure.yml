@@ -16,6 +16,13 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ secrets.AWS_REGION }}
 
+    - name: Load environment variables
+      uses: thaind0/envfile@v1
+      with:
+        secrets: ${{ toJSON(secrets) }}
+        override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
+        file: .env
+
     - name: Get VPC ID
       id: get-vpc-id
       run: |
@@ -31,28 +38,21 @@ jobs:
         echo "LAMBDA_SG_ID=$LAMBDA_SG_ID" >> $GITHUB_ENV
 
     - name: Fail if VPC_ID is empty or undefined
-      if: ${{ env.VPC_ID == '' }}
+      if: ${{ env.VPC_ID == '' || env.VPC_ID == 'None' }}
       run: |
         echo "VPC_ID is empty. Exiting workflow."
-        exit
+        exit 1
 
-    - name: Fail if LAMBDA_SG_NAME is empty or undefined
-      if: ${{ env.LAMBDA_SG_NAME == '' }}
+    - name: Fail if LAMBDA_SG_ID is empty or undefined
+      if: ${{ env.LAMBDA_SG_ID == '' || env.LAMBDA_SG_ID == 'None'  }}
       run: |
-        echo "LAMBDA_SG_NAME is empty. Exiting workflow."
-        exit
-
-    - name: Load environment variables
-      uses: thaind0/envfile@v1
-      with:
-        secrets: ${{ toJSON(secrets) }}
-        override: false # prevent overriding VPC_ID -> don't create the env variables
-        file: .env
+        echo "LAMBDA_SG_ID is empty. Exiting workflow."
+        exit 1
 
     - name: Overwrite .env variable
       run: |
-        echo "VPC_ID=${{ secrets.VPC_ID }}" >> .env
-        echo "LAMBDA_SG_ID=${{ secrets.LAMBDA_SG_ID }}" >> .env
+        echo "VPC_ID=${{ env.VPC_ID }}" >> .env
+        echo "LAMBDA_SG_ID=${{ env.LAMBDA_SG_ID }}" >> .env
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
