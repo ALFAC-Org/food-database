@@ -23,18 +23,21 @@ jobs:
         override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
         file: .env
 
+    - name: Echo variables
+      run: |
+        echo ${{ secrets.VPC_NAME }}
+        echo ${{ secrets.LAMBDA_SG_NAME }}
+
     - name: Get VPC ID
       id: get-vpc-id
       run: |
-        VPC_NAME="${{ secrets.VPC_NAME }}"
-        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=$VPC_NAME" --query "Vpcs[0].VpcId" --output text)
+        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=${{ secrets.VPC_NAME }}" --query "Vpcs[0].VpcId" --output text)
         echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
 
     - name: Get Lambda Security Group ID
       id: get-lambda-sg-id
       run: |
-        SG_NAME="${{ secrets.LAMBDA_SG_NAME }}"
-        LAMBDA_SG_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=$SG_NAME" --query "SecurityGroups[0].GroupId" --output text)
+        LAMBDA_SG_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=${{ secrets.LAMBDA_SG_NAME }}" --query "SecurityGroups[0].GroupId" --output text)
         echo "LAMBDA_SG_ID=$LAMBDA_SG_ID" >> $GITHUB_ENV
 
     - name: Fail if VPC_ID is empty or undefined
@@ -50,14 +53,17 @@ jobs:
         exit 1
 
     - name: Overwrite .env variable
+      if: success()
       run: |
         echo "VPC_ID=${{ env.VPC_ID }}" >> .env
         echo "LAMBDA_SG_ID=${{ env.LAMBDA_SG_ID }}" >> .env
 
     - name: Setup Terraform
+      if: success()
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Init
+      if: success()
       run: terraform init -upgrade
 
   apply-database-infraestructure:
