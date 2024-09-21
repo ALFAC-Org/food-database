@@ -1,0 +1,78 @@
+name: AWS - Cria infraestrutura do banco de dados
+
+on:
+  workflow_dispatch:
+
+jobs:
+  preapare-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Get VPC ID
+      id: get-vpc-id
+      run: |
+        VPC_NAME="${{ env.VPC_NAME }}"
+        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=$VPC_NAME" --query "Vpcs[0].VpcId" --output text)
+        echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
+
+    - name: Get Lambda Security Group ID
+      id: get-lambda-sg-id
+      run: |
+        SG_NAME="${{ env.LAMBDA_SG_NAME }}"
+        LAMBDA_SG_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=$SG_NAME" --query "SecurityGroups[0].GroupId" --output text)
+        echo "LAMBDA_SG_ID=$LAMBDA_SG_ID" >> $GITHUB_ENV
+
+    - name: Fail if VPC_ID is empty or undefined
+      if: ${{ env.VPC_ID == '' }}
+      run: |
+        echo "VPC_ID is empty. Exiting workflow."
+        exit
+
+    - name: Fail if LAMBDA_SG_NAME is empty or undefined
+      if: ${{ env.LAMBDA_SG_NAME == '' }}
+      run: |
+        echo "LAMBDA_SG_NAME is empty. Exiting workflow."
+        exit
+
+    - name: Load environment variables
+      uses: thaind0/envfile@v1
+      with:
+        secrets: ${{ toJSON(secrets) }}
+        override: false # prevent overriding VPC_ID -> don't create the env variables
+        file: .env
+
+    - name: Overwrite .env variable
+      run: |
+        echo "VPC_ID=${{ env.VPC_ID }}" >> .env
+        echo "LAMBDA_SG_ID=${{ env.LAMBDA_SG_ID }}" >> .env
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      run: terraform init -upgrade
+
+  apply-database-infraestructure:
+    needs: preapare-dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: bash terraform.sh plan
+
+    - name: Terraform Apply
+      run: bash terraform.sh apply -auto-approve
