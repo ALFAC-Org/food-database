@@ -72,8 +72,11 @@ jobs:
   apply-database-infraestructure:
     needs: preapare-dependencies
     runs-on: ubuntu-latest
-    
+
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Terraform Validate
       run: terraform validate
 
