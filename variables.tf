@@ -19,11 +19,13 @@ variable "vpc_id" {
 variable "subnet_database_1_cidr_block" {
   description = "CIDR block for the database subnet"
   type        = string
+  default     = "10.0.5.0/24"
 }
 
 variable "subnet_database_2_cidr_block" {
   description = "CIDR block for the database subnet"
   type        = string
+  default     = "10.0.6.0/24"
 }
 
 variable "subnet_availability_zone_az_1" {
@@ -40,18 +42,27 @@ variable "subnet_availability_zone_az_2" {
 variable "db_username" {
   description = "The username for the RDS instance"
   type        = string
+  sensitive   = true
+  default     = "fooddbuser"
 }
 
 variable "db_password" {
   description = "The password for the RDS instance"
   type        = string
   sensitive   = true
+  default     = "fooddbpass"
 }
 
 variable "db_name" {
   description = "Security Group ID for the Lambda"
   type        = string
   default     = "fooddb"
+}
+
+variable "db_identifier" {
+  description = "The identifier for the RDS instance"
+  type        = string
+  default     = "food-db"
 }
 
 # Lambda configuration

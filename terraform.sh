@@ -29,5 +29,6 @@ terraform $METHOD $PARAMS \
 -var "subnet_availability_zone_az_2=$SUBNET_AVAILABILITY_ZONE_AZ_2" \
 -var "db_username=$DB_USERNAME" \
 -var "db_password=$DB_PASSWORD" \
+-var "db_identifier=$DB_IDENTIFIER" \
 -var "db_name=$DB_NAME" \
 -var "lambda_sg_id=$LAMBDA_SG_ID"
