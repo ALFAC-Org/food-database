@@ -46,7 +46,7 @@ jobs:
     - name: Get EKS Cluster ID
       id: get-eks-cluster-id
       run: |
-        CLUSTER_SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=${{ secrets.CLUSTER_NAME }}" --query "SecurityGroups[0].GroupId" --output text)
+        CLUSTER_SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=${{ secrets.CLUSTER_NAME }}-sg" --query "SecurityGroups[0].GroupId" --output text)
         echo "CLUSTER_SG_ID=$CLUSTER_SG_ID" >> $GITHUB_ENV
 
     - name: Fail if VPC_ID is empty or undefined
