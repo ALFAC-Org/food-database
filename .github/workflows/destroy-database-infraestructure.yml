@@ -1,4 +1,4 @@
-name: AWS - Cria infraestrutura do banco de dados
+name: AWS - Destrói infraestrutura do banco de dados
 
 on:
   workflow_dispatch:
@@ -85,6 +85,6 @@ jobs:
       if: success()
       run: bash terraform.sh plan
 
-    - name: Terraform Apply
+    - name: Terraform Destroy
       if: success()
-      run: bash terraform.sh apply -auto-approve
+      run: bash terraform.sh destroy -auto-approve
