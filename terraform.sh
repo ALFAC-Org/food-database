@@ -31,4 +31,5 @@ terraform $METHOD $PARAMS \
 -var "db_password=$DB_PASSWORD" \
 -var "db_identifier=$DB_IDENTIFIER" \
 -var "db_name=$DB_NAME" \
--var "lambda_sg_id=$LAMBDA_SG_ID"
+-var "lambda_sg_id=$LAMBDA_SG_ID" \
+-var "cluster_sg_id=$CLUSTER_SG_ID"

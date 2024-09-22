@@ -70,3 +70,9 @@ variable "lambda_sg_id" {
   description = "Security Group ID for the Lambda"
   type        = string
 }
+
+# EKS configuration
+variable "cluster_sg_id" {
+  description = "Security Group ID for the EKS Cluster"
+  type        = string
+}

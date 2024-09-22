@@ -43,6 +43,12 @@ jobs:
         LAMBDA_SG_ID=$(aws ec2 describe-security-groups --filters "Name=group-name,Values=${{ secrets.LAMBDA_SG_NAME }}" --query "SecurityGroups[0].GroupId" --output text)
         echo "LAMBDA_SG_ID=$LAMBDA_SG_ID" >> $GITHUB_ENV
 
+    - name: Get EKS Cluster ID
+      id: get-eks-cluster-id
+      run: |
+        CLUSTER_SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=${{ secrets.CLUSTER_NAME }}" --query "SecurityGroups[0].GroupId" --output text)
+        echo "CLUSTER_SG_ID=$CLUSTER_SG_ID" >> $GITHUB_ENV
+
     - name: Fail if VPC_ID is empty or undefined
       if: ${{ env.VPC_ID == '' || env.VPC_ID == 'None' }}
       run: |
@@ -55,11 +61,18 @@ jobs:
         echo "LAMBDA_SG_ID is empty. Exiting workflow."
         exit 1
 
+    - name: Fail if CLUSTER_SG_ID is empty or undefined
+      if: ${{ env.CLUSTER_SG_ID == '' || env.CLUSTER_SG_ID == 'None'  }}
+      run: |
+        echo "CLUSTER_SG_ID is empty. Exiting workflow."
+        exit 1
+
     - name: Overwrite .env variable
       if: success()
       run: |
         echo "VPC_ID=${{ env.VPC_ID }}" >> .env
         echo "LAMBDA_SG_ID=${{ env.LAMBDA_SG_ID }}" >> .env
+        echo "CLUSTER_SG_ID=${{ env.CLUSTER_SG_ID }}" >> .env
 
     - name: Setup Terraform
       if: success()

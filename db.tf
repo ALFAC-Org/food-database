@@ -22,7 +22,7 @@ resource "aws_security_group" "food_db_sg" {
     to_port     = 3306
     protocol    = "tcp"
     security_groups = [
-      # TODO: Add application kubernetes security group - aws_security_group.app_sg.id,
+      var.cluster_sg_id,
       var.lambda_sg_id
     ]
   }
