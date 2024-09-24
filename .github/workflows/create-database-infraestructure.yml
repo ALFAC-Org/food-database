@@ -77,7 +77,7 @@ jobs:
       if: success()
       run: |
         echo BUCKET NAME=${{ secrets.AWS_BUCKET_NAME }}
-        terraform init -upgrade -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" -backend-config="key=create-database-backend.tfstate" -backend-config="region=${{ secrets.AWS_REGION }}"
+        terraform init -upgrade -reconfigure -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" -backend-config="key=create-database-backend.tfstate" -backend-config="region=${{ secrets.AWS_REGION }}"
 
     - name: Terraform Validate
       if: success()
