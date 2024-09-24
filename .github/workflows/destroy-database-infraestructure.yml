@@ -81,10 +81,6 @@ jobs:
       if: success()
       run: terraform validate
 
-    - name: Terraform Plan
-      if: success()
-      run: bash terraform.sh plan
-
     - name: Terraform Destroy
       if: success()
       run: bash terraform.sh destroy -auto-approve
