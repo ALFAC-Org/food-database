@@ -19,8 +19,7 @@ O banco de dados escolhido para essa aplicação foi o MySql, devido ao seu mode
 - Embora a escalabilidade horizontal não seja uma opção, ainda podemos explorar a escalabilidade vertical. Além disso, para atender a necessidades futuras, poderíamos considerar a utilização de um banco de dados chave-valor com persistência em memória, como o Redis. Esse banco poderia ser usado para armazenar o catálogo de produtos em cache, permitindo que as consultas sejam direcionadas primariamente para ele, o que ajudaria a melhorar a performance do sistema.
 
 ### MER
-
-TODO
+![MER](./docs/mer.png)
 
 ## Como rodar o projeto
 
