@@ -1,4 +1,4 @@
-name: AWS - Cria infraestrutura do banco de dados
+name: AWS - Cria food-cliente-db
 
 on:
   workflow_dispatch:
@@ -6,6 +6,10 @@ on:
 jobs:
   preapare-dependencies:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: food-cliente-db
 
     steps:
     - name: Checkout code

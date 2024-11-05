@@ -1,4 +1,4 @@
-name: AWS - Destrói infraestrutura do banco de dados
+name: AWS - Cria food-db
 
 on:
   workflow_dispatch:
@@ -6,6 +6,10 @@ on:
 jobs:
   preapare-dependencies:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: food-db
 
     steps:
     - name: Checkout code
@@ -40,8 +44,9 @@ jobs:
 
     - name: Get EKS Cluster ID
       id: get-eks-cluster-id
+      # CLUSTER_SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=${{ secrets.CLUSTER_NAME }}-sg" --query "SecurityGroups[0].GroupId" --output text)
       run: |
-        CLUSTER_SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=${{ secrets.CLUSTER_NAME }}-sg" --query "SecurityGroups[0].GroupId" --output text)
+        CLUSTER_SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:aws:eks:cluster-name,Values=${{ secrets.CLUSTER_NAME }}" --query "SecurityGroups[0].GroupId" --output text)
         echo "CLUSTER_SG_ID=$CLUSTER_SG_ID" >> $GITHUB_ENV
 
     - name: Fail if VPC_ID is empty or undefined
@@ -75,12 +80,18 @@ jobs:
 
     - name: Terraform Init
       if: success()
-      run: terraform init -upgrade -reconfigure -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" -backend-config="key=create-database-backend.tfstate" -backend-config="region=${{ secrets.AWS_REGION }}"
+      run: |
+        echo BUCKET NAME=${{ secrets.AWS_BUCKET_NAME }}
+        terraform init -upgrade -reconfigure -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" -backend-config="key=create-database-backend.tfstate" -backend-config="region=${{ secrets.AWS_REGION }}"
 
     - name: Terraform Validate
       if: success()
       run: terraform validate
 
-    - name: Terraform Destroy
+    - name: Terraform Plan
       if: success()
-      run: bash terraform.sh destroy -auto-approve
+      run: bash terraform.sh plan
+
+    - name: Terraform Apply
+      if: success()
+      run: bash terraform.sh apply -auto-approve
