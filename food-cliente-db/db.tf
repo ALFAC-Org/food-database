@@ -1,6 +1,6 @@
 #Subnet group
 resource "aws_db_subnet_group" "food_cliente_db_subnet_group" {
-  name = "food-db-subnet-group"
+  name = "food-cliente-db-subnet-group"
   subnet_ids = [
     aws_subnet.food_cliente_database_subnet_az_1.id,
     aws_subnet.food_cliente_database_subnet_az_2.id
