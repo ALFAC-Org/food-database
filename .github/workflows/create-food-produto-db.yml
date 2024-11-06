@@ -1,0 +1,53 @@
+name: AWS - Cria food-produto-db
+
+on:
+  workflow_dispatch:
+
+jobs:
+  preapare-dependencies:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: food-produto-db
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Load environment variables
+      uses: thaind0/envfile@v1
+      with:
+        secrets: ${{ toJSON(secrets) }}
+        override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
+        file: .env
+
+    - name: Setup Terraform
+      if: success()
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      if: success()
+      run: |
+        echo BUCKET NAME=${{ secrets.AWS_BUCKET_NAME }}
+        terraform init -upgrade -reconfigure -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}" -backend-config="key=food-produto-db.tfstate" -backend-config="region=${{ secrets.AWS_REGION }}"
+
+    - name: Terraform Validate
+      if: success()
+      run: terraform validate
+
+    - name: Terraform Plan
+      if: success()
+      run: bash terraform.sh plan
+
+    - name: Terraform Apply
+      if: success()
+      run: bash terraform.sh apply -auto-approve
