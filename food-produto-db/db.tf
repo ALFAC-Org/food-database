@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "food_product_dynamodb" {
-  name           = "food_product_table"
+resource "aws_dynamodb_table" "food_produto_dynamodb" {
+  name           = "food_produto"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
@@ -11,6 +11,6 @@ resource "aws_dynamodb_table" "food_product_dynamodb" {
   }
 
   tags = {
-	Name = "food_product_dynamodb"
+	Name = "food_produto_dynamodb"
   }
 }
