@@ -30,6 +30,9 @@ jobs:
         override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
         file: .env
 
+    - name: List files for debugging
+      run: ls -la
+
     - name: Get VPC ID
       id: get-vpc-id
       run: |
