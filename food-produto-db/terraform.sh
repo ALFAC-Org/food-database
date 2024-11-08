@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Carrega as variáveis do arquivo .env
+ls -la
 if [ -f .env ]; then
     export $(grep -v '^#' .env | xargs)
 else
