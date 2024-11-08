@@ -21,4 +21,4 @@ PARAMS="$@"
 
 terraform $METHOD $PARAMS \
 -var "aws_region=$AWS_REGION" \
--var "arn_aws_lab_role=$ARN_AWS_LAB_ROLE" \
+-var "arn_aws_lab_role=$ARN_AWS_LAB_ROLE"
