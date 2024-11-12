@@ -44,7 +44,8 @@ jobs:
 
     - name: Terraform Destroy
       if: success()
-      run: bash terraform.sh destroy -auto-approve
+      # run: bash terraform.sh destroy -auto-approve
+      run: terraform destroy -auto-approve -var "aws_region=$AWS_REGION" -var "arn_aws_lab_role=$ARN_AWS_LAB_ROLE"
 
     - name: Delete Terraform s3
       run: |
