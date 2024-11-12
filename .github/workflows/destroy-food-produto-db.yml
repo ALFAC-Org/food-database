@@ -23,12 +23,12 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Load environment variables
-      uses: thaind0/envfile@v1
-      with:
-        secrets: ${{ toJSON(secrets) }}
-        override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
-        file: .env
+    # - name: Load environment variables
+    #   uses: thaind0/envfile@v1
+    #   with:
+    #     secrets: ${{ toJSON(secrets) }}
+    #     override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
+    #     file: .env
 
     - name: Setup Terraform
       if: success()

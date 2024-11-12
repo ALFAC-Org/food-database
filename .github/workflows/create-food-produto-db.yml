@@ -23,16 +23,6 @@ jobs:
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    # - name: Load environment variables TODO: uncomment this block
-    #   uses: thaind0/envfile@v1
-    #   with:
-    #     secrets: ${{ toJSON(secrets) }}
-    #     override: false # prevent overriding VPC_ID | LAMBDA_SG_ID -> don't create the env variables
-    #     file: .env
-
-    - name: List files for debugging
-      run: ls -la
-
     - name: Setup Terraform
       if: success()
       uses: hashicorp/setup-terraform@v1
@@ -49,10 +39,14 @@ jobs:
 
     - name: Terraform Plan
       if: success()
-      # run: bash terraform.sh plan
       run: terraform plan -var "aws_region=$AWS_REGION" -var "arn_aws_lab_role=$ARN_AWS_LAB_ROLE"
 
     - name: Terraform Apply
       if: success()
-      # run: bash terraform.sh apply -auto-approve
       run: terraform apply -auto-approve -var "aws_region=$AWS_REGION" -var "arn_aws_lab_role=$ARN_AWS_LAB_ROLE"
+    
+    - name: Populate database
+      if: success()
+      run: |
+        echo "Populating database"
+        aws dynamodb batch-write-item --request-items file://batch-write-items.json
