@@ -8,26 +8,6 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
 	type = "N"
   }
 
-  attribute {
-    name = "uuid"
-    type = "B"
-  }
-
-  attribute {
-    name = "nome"
-    type = "S"
-  }
-
-  attribute {
-    name = "preco"
-    type = "N"
-  }
-
-  attribute {
-    name = "categoria"
-    type = "S"
-  }
-
   tags = {
 	Name = "food_produto_dynamodb"
   }
