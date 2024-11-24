@@ -13,9 +13,8 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
   }
 }
 
-resource "aws_iam_policy" "dynamodb_policy" {
-  name        = "DynamoDBPolicy"
-  description = "Policy for DynamoDB table food_produto"
+resource "aws_dynamodb_resource_policy" "dynamodb_policy" {
+  resource_arn = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto" // Esse valor talvez possamos pegar
   policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -25,13 +24,8 @@ resource "aws_iam_policy" "dynamodb_policy" {
           AWS = var.arn_aws_lab_role
         }
         Action   = "dynamodb:*"
-        Resource = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto"
+        Resource = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto" // Esse valor talvez possamos pegar
       }
     ]
   })
-}
-
-resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy" {
-  role       = "LabRole"
-  policy_arn = aws_iam_policy.dynamodb_policy.arn
 }
