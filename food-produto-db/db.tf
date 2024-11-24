@@ -13,10 +13,10 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
   }
 }
 
-resource "aws_iam_policy" "dynamodb_policy" {
-  name        = "DynamoDBPolicy"
-  description = "Policy for DynamoDB table food_produto"
-  policy      = jsonencode({
+resource "aws_dynamodb_table_item" "food_produto_policy" {
+  table_name = aws_dynamodb_table.food_produto_dynamodb.name
+  hash_key   = "id"
+  item       = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -25,7 +25,7 @@ resource "aws_iam_policy" "dynamodb_policy" {
           AWS = var.arn_aws_lab_role
         }
         Action   = "dynamodb:*"
-        Resource = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto" // Esse valor talvez possamos pegar dinamicamente
+        Resource = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto"
       }
     ]
   })
