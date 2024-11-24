@@ -28,4 +28,6 @@ resource "aws_dynamodb_resource_policy" "dynamodb_policy" {
       }
     ]
   })
+
+  depends_on = [aws_dynamodb_table.food_produto_dynamodb]
 }
