@@ -13,10 +13,10 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
   }
 }
 
-resource "aws_dynamodb_table_policy" "food_produto_policy" {
-  table_name = aws_dynamodb_table.food_produto_dynamodb.name
-
-  policy = jsonencode({
+resource "aws_iam_policy" "dynamodb_policy" {
+  name        = "DynamoDBPolicy"
+  description = "Policy for DynamoDB table food_produto"
+  policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -29,4 +29,9 @@ resource "aws_dynamodb_table_policy" "food_produto_policy" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy" {
+  role       = "LabRole"
+  policy_arn = aws_iam_policy.dynamodb_policy.arn
 }
