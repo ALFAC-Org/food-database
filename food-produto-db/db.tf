@@ -5,7 +5,7 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
 
   attribute {
 	name = "id"
-	type = "S"
+	type = "N"
   }
 
   tags = {
