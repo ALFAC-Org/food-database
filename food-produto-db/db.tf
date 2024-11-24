@@ -13,10 +13,10 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
   }
 }
 
-resource "aws_dynamodb_table_item" "food_produto_policy" {
+resource "aws_dynamodb_table_policy" "food_produto_policy" {
   table_name = aws_dynamodb_table.food_produto_dynamodb.name
-  hash_key   = "id"
-  item       = jsonencode({
+
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
