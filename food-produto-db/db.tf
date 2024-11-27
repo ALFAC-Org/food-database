@@ -21,7 +21,7 @@ resource "aws_dynamodb_resource_policy" "dynamodb_policy" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::000687245264:role/LabRole"
+          AWS = var.arn_aws_lab_role
         }
         Action   = "dynamodb:*"
         Resource = "arn:aws:dynamodb:us-east-1:000687245264:table/food_produto"
