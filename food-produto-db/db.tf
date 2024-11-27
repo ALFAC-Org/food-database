@@ -14,17 +14,17 @@ resource "aws_dynamodb_table" "food_produto_dynamodb" {
 }
 
 resource "aws_dynamodb_resource_policy" "dynamodb_policy" {
-  resource_arn = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto" // Esse valor talvez possamos pegar
+  resource_arn = aws_dynamodb_table.food_produto_dynamodb.arn
   policy      = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::767398113061:role/LabRole"
+          AWS = var.arn_aws_lab_role
         }
         Action   = "dynamodb:*"
-        Resource = "arn:aws:dynamodb:us-east-1:767398113061:table/food_produto" // Esse valor talvez possamos pegar
+        Resource = aws_dynamodb_table.food_produto_dynamodb.arn
       }
     ]
   })
